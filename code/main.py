@@ -122,7 +122,6 @@ def collectTxnOut(p, addr, timeout=200):
 if __name__=='__main__':
     color.pInfo('Starting with addresse file in address folder')
     color.pInfo('Usage: python code/main.py')
-    times = [time.time()]
 
     # os.makedirs('log')
     # os.makedirs('sql')
@@ -133,21 +132,23 @@ if __name__=='__main__':
     dirPath = 'address'
     # addrs = os.listdir(dirPath)
     p = connectPSQL(psql)
+    times = [time.time()]
 
-    addr = 'Union_addr.csv'
+    addr = '174ponzi_addr.csv'
     color.pImportant('addr file: '+addr)
     full_path = os.path.join(dirPath,addr)
     
     in_csv = collectTxnIn(p,full_path)
     out_csv = collectTxnOut(p,full_path)
     times.append(time.time())
-    color.pImportant('collected all txns in '+str(times[-2]-times[-1]))
+    color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
 
     data_file = 'test_'+addr.split('.')[0].split('_')[1]+'_database.csv'
     data_file = os.path.join('result',data_file)
     deal_sql.deal_feature(in_csv, out_csv, data_file)
     feature.extract(data_file)
-    color.pImportant('dealed all datas in '+str(times[-2]-times[-1]))
+    times.append(time.time())
+    color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
     p.close()    
 
     color.pImportant('total time used: '+str(times[-1]-times[0]))
