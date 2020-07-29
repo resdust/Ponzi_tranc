@@ -143,7 +143,7 @@ if __name__=='__main__':
     times.append(time.time())
     color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
 
-    data_file = 'test_'+addr.split('.')[0].split('_')[1]+'_database.csv'
+    data_file = addr.split('.')[0]+'_database.csv'
     data_file = os.path.join('result',data_file)
     deal_sql.deal_feature(in_csv, out_csv, data_file)
     feature.extract(data_file)
