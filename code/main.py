@@ -147,6 +147,7 @@ if __name__=='__main__':
         feature.extract(data_file)
         times.append(time.time())
         color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
+        color.pImportant('')
         
     p.close()    
 
