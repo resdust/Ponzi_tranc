@@ -123,10 +123,8 @@ if __name__=='__main__':
     color.pInfo('Starting with addresse file in address folder')
     color.pInfo('Usage: python code/main.py')
 
-    # os.makedirs('log')
-    # os.makedirs('sql')
-
     psql = 'psql --host 192.168.1.2 -U gby ethereum'
+    addrs = ['174ponzi_addr.csv','500dapp_addr.csv']
     
     # collect val and time sequence from addresses
     dirPath = 'address'
@@ -134,21 +132,22 @@ if __name__=='__main__':
     p = connectPSQL(psql)
     times = [time.time()]
 
-    addr = '174ponzi_addr.csv'
-    color.pImportant('addr file: '+addr)
-    full_path = os.path.join(dirPath,addr)
-    
-    in_csv = collectTxnIn(p,full_path)
-    out_csv = collectTxnOut(p,full_path)
-    times.append(time.time())
-    color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
+    for addr in addrs:
+        color.pImportant('addr file: '+addr)
+        full_path = os.path.join(dirPath,addr)
+        
+        in_csv = collectTxnIn(p,full_path)
+        out_csv = collectTxnOut(p,full_path)
+        times.append(time.time())
+        color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
 
-    data_file = addr.split('.')[0]+'_database.csv'
-    data_file = os.path.join('result',data_file)
-    deal_sql.deal_feature(in_csv, out_csv, data_file)
-    feature.extract(data_file)
-    times.append(time.time())
-    color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
+        data_file = addr.split('.')[0]+'_database.csv'
+        data_file = os.path.join('result',data_file)
+        deal_sql.deal_feature(in_csv, out_csv, data_file)
+        feature.extract(data_file)
+        times.append(time.time())
+        color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
+        
     p.close()    
 
     color.pImportant('total time used: '+str(times[-1]-times[0]))
