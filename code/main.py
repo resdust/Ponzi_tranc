@@ -134,7 +134,7 @@ if __name__=='__main__':
     times = [time.time()]
 
     color.pImportant('addr file: '+addr)
-    full_path = os.path.join(dirPath,addr)
+    full_path = os.path.join(dirPath,)
     
     in_csv = collectTxnIn(p,full_path)
     out_csv = collectTxnOut(p,full_path)
