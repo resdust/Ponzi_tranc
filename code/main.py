@@ -124,7 +124,8 @@ if __name__=='__main__':
     color.pInfo('Usage: python code/main.py')
 
     psql = 'psql --host 192.168.1.2 -U gby ethereum'
-    addrs = ['174ponzi_addr.csv','500dapp_addr.csv']
+    addr = 'final_addr.csv'
+    label = 'final_label.csv'
     
     # collect val and time sequence from addresses
     dirPath = 'address'
@@ -132,23 +133,27 @@ if __name__=='__main__':
     p = connectPSQL(psql)
     times = [time.time()]
 
-    for addr in addrs:
-        color.pImportant('addr file: '+addr)
-        full_path = os.path.join(dirPath,addr)
-        
-        in_csv = collectTxnIn(p,full_path)
-        out_csv = collectTxnOut(p,full_path)
-        times.append(time.time())
-        color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
+    color.pImportant('addr file: '+addr)
+    full_path = os.path.join(dirPath,addr)
+    
+    in_csv = collectTxnIn(p,full_path)
+    out_csv = collectTxnOut(p,full_path)
+    times.append(time.time())
+    color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
 
-        data_file = addr.split('.')[0]+'_database.csv'
-        data_file = os.path.join('result',data_file)
-        deal_sql.deal_feature(in_csv, out_csv, data_file)
-        feature.extract(data_file)
-        times.append(time.time())
-        color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
-        color.pImportant('')
-        
+    data_file = addr.split('.')[0]+'_database.csv'
+    data_file = os.path.join('result',data_file)
+    deal_sql.deal_feature(in_csv, out_csv, data_file)
+    feature_file = feature.extract(data_file)
+    times.append(time.time())
+    color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
+    color.pImportant('')
+
+    feature_df = pd.read_csv(feautre_file)
+    label_df = pd.read_csv(os.path.join(dirPath,label),header=None)
+    label_df.columns=['ponzi']
+    feature_df['ponzi'] = label_df['ponzi']
+    feature_df.to_csv(feature_file,index=None)
+    
     p.close()    
-
     color.pImportant('total time used: '+str(times[-1]-times[0]))

@@ -55,6 +55,7 @@ def extract(database):
     f_file = os.path.join('feature',name.split('_')[0]+'_'+name.split('_')[1]+'_feature.csv')
     df_features.to_csv(f_file,index=None)
     color.pDone('Have written feature file '+ f_file+'.')
+    return f_file
 
 def combine(f1,f2,w_file):
     df1 = pd.read_csv(f1)
