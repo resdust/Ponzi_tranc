@@ -78,7 +78,7 @@ def collectTxnIn(p, addr, timeout=200):
     color.pInfo('Sending incoming transaction query to psql server')
     p.sendline('\o '+out_file)
     p.expect('#')
-    sq.val_sql(addr, query_in[0:1], p)
+    sq.val_sql(addr, query_in[:2], p)
     color.pDone('Have generated '+out_file+'.')
     
     # send time command to sql process
@@ -100,7 +100,7 @@ def collectTxnIn(p, addr, timeout=200):
     color.pInfo('Sending incoming transaction in internal_trx to psql server')
     p.sendline('\o '+out_file)
     p.expect('#')
-    sq.val_sql(addr, query_in[2:3], p)
+    sq.val_sql(addr, query_in[-2:], p)
     color.pDone('Have generated '+out_file+'.')
     
     # collect the query result into txn features
