@@ -61,7 +61,7 @@ def extract(database):
     raw_data = pd.read_csv(database)
     raw_data = raw_data.fillna(0)
     tx_features = []
-    f_names = ['ponzi',
+    f_names = [#'ponzi',
                 'address',
                 'nbr_tx_in',
                 'nbr_tx_out', 
@@ -78,7 +78,7 @@ def extract(database):
                 'lifetime',
                 ]
     for i in range(raw_data.shape[0]):
-        ponzi = raw_data.iloc[i]['ponzi']
+        # ponzi = raw_data.iloc[i]['ponzi']
         address = raw_data.iloc[i]['address']
         time_in = raw_data.iloc[i]['time_in']
         time_out = raw_data.iloc[i]['time_out']
@@ -86,7 +86,7 @@ def extract(database):
         val_out = raw_data.iloc[i]['val_out']
         if val_in != '' or val_out != '':
             #f = tl.basic_features(ponzi, time_in, time_out, val_in, val_out)
-            f = tl.basic_features(ponzi,address, time_in, time_out, val_in, val_out)
+            f = tl.basic_features(None,address, time_in, time_out, val_in, val_out)
             tx_features.append(f)
 
     tl.compute_time(t0)
