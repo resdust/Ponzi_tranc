@@ -3,7 +3,7 @@ import os
 import color
 
 query_out = [
-    'select timestamp, value from internal_transaction where from_address=\'\\',
+    'select timestamp, value from internal_transaction where from_address=\'',
     '\' and value!=\'0\';\r'
 ]
 

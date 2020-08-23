@@ -67,19 +67,21 @@ def collectTxnIn(p, addr, timeout=200):
     color.pInfo('Collecting transactions into contract')
     query_in = [
         'select block_hash,value from external_transaction where to_address=\'',
-        '\' and value!=\'0\';'
+        '\' and value!=\'0\' limit 1000;',
+        'select timestamp, value from internal_transaction where to_address=\'',
+        '\' and value!=\'0\' limit 1000;'
         ]
     name = os.path.basename(addr).split('.')[0]
       
-    # send command to sql process
+    # send value, hash command to sql process
     out_file = os.path.join('result',name+'_in.out')
     color.pInfo('Sending incoming transaction query to psql server')
     p.sendline('\o '+out_file)
     p.expect('#')
-    sq.val_sql(addr, query_in, p)
+    sq.val_sql(addr, query_in[0:1], p)
     color.pDone('Have generated '+out_file+'.')
     
-    # send command to sql process
+    # send time command to sql process
     txn_file = os.path.join('result',name+'_in.csv')
     time_file = os.path.join('result',name+'_time.out')
     block_hash = deal_sql.deal_in(addr, out_file, txn_file)
@@ -92,6 +94,24 @@ def collectTxnIn(p, addr, timeout=200):
     
     # collect the query result into txn features
     deal_sql.deal_in_timestamp(txn_file, time_file)
+
+    # send command to sql process
+    out_file = os.path.join('result',name+'_internal.out')
+    color.pInfo('Sending incoming transaction in internal_trx to psql server')
+    p.sendline('\o '+out_file)
+    p.expect('#')
+    sq.val_sql(addr, query_in[2:3], p)
+    color.pDone('Have generated '+out_file+'.')
+    
+    # collect the query result into txn features
+    txn_file_inter = os.path.join('result',name+'inter_out.csv')
+    deal_sql.deal_out(addr, out_file, txn_file_inter)
+
+    df1 = pd.read_csv(txn_file)
+    df2 = pd.read_csv(txn_file_inter)
+    df = df1.append(df2)
+    df.to_csv(txn_file,index=None)
+    color.pImportant('incoming txn shape'+str(df.shape))
     
     return txn_file
 
@@ -101,7 +121,7 @@ def collectTxnOut(p, addr, timeout=200):
     color.pInfo('Collecting transactions out of contract')
     query_out = [
         'select timestamp, value from internal_transaction where from_address=\'',
-        '\' and value!=\'0\';\r',
+        '\' and value!=\'0\' limit 1000;\r',
     ]
     name = os.path.basename(addr).split('.')[0]
     
@@ -124,8 +144,7 @@ if __name__=='__main__':
     color.pInfo('Usage: python code/main.py')
 
     psql = 'psql --host 192.168.1.2 -U gby ethereum'
-    addr = 'final_addr.csv'
-    label = 'final_label.csv'
+    addrs = ['dapp1.csv','dapp2.csv','dapp3.csv','dapp4.csv']
     
     # collect val and time sequence from addresses
     dirPath = 'address'
@@ -133,27 +152,28 @@ if __name__=='__main__':
     p = connectPSQL(psql)
     times = [time.time()]
 
-    color.pImportant('addr file: '+addr)
-    full_path = os.path.join(dirPath,)
-    
-    in_csv = collectTxnIn(p,full_path)
-    out_csv = collectTxnOut(p,full_path)
-    times.append(time.time())
-    color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
+    for addr in addrs:
+        color.pImportant('addr file: '+addr)
+        full_path = os.path.join(dirPath,addr)
+        
+        in_csv = collectTxnIn(p,full_path)
+        out_csv = collectTxnOut(p,full_path)
+        times.append(time.time())
+        color.pImportant('collected all txns in '+str(times[-1]-times[-2]))
 
-    data_file = addr.split('.')[0]+'_database.csv'
-    data_file = os.path.join('result',data_file)
-    deal_sql.deal_feature(in_csv, out_csv, data_file)
-    feature_file = feature.extract(data_file)
-    times.append(time.time())
-    color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
-    color.pImportant('')
+        data_file = addr.split('.')[0]+'_database.csv'
+        data_file = os.path.join('result',data_file)
+        deal_sql.deal_feature(in_csv, out_csv, data_file)
+        feature_file = feature.extract(data_file)
+        times.append(time.time())
+        color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
+        color.pImportant('')
 
-    feature_df = pd.read_csv(feautre_file)
-    label_df = pd.read_csv(os.path.join(dirPath,label),header=None)
-    label_df.columns=['ponzi']
-    feature_df['ponzi'] = label_df['ponzi']
-    feature_df.to_csv(feature_file,index=None)
-    
+        feature_df = pd.read_csv(feature_file)
+        label_df = pd.read_csv(os.path.join(dirPath,label),header=None)
+        label_df.columns=['ponzi']
+        feature_df['ponzi'] = label_df['ponzi']
+        feature_df.to_csv(feature_file,index=None)
+        
     p.close()    
     color.pImportant('total time used: '+str(times[-1]-times[0]))

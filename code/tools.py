@@ -102,7 +102,7 @@ def basic_features(ponzi,address,time_in,time_out,val_in,val_out):
     times = np.concatenate((time_in, time_out))
 
     res = np.asarray([
-            #ponzi,
+            ponzi,
             address,
             N_in,
             N_out,
