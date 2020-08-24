@@ -144,7 +144,8 @@ if __name__=='__main__':
     color.pInfo('Usage: python code/main.py')
 
     psql = 'psql --host 192.168.1.2 -U gby ethereum'
-    addrs = ['dapp1.csv','dapp2.csv','dapp3.csv','dapp4.csv']
+    addrs = ['100dapp.csv']
+    # addrs = ['dapp1.csv','dapp2.csv','dapp3.csv','dapp4.csv']
     
     # collect val and time sequence from addresses
     dirPath = 'address'
@@ -168,12 +169,12 @@ if __name__=='__main__':
         times.append(time.time())
         color.pImportant('dealed all datas in '+str(times[-1]-times[-2]))
         color.pImportant('')
-
+        '''
         feature_df = pd.read_csv(feature_file)
         label_df = pd.read_csv(os.path.join(dirPath,label),header=None)
         label_df.columns=['ponzi']
         feature_df['ponzi'] = label_df['ponzi']
         feature_df.to_csv(feature_file,index=None)
-        
+        '''
     p.close()    
     color.pImportant('total time used: '+str(times[-1]-times[0]))

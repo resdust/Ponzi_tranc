@@ -5,42 +5,63 @@ import color
 import os
 import time
 
-def trxData(diry='data',addr=r'address\final_addr+label.csv'):
+def trxData(diry='data',addr=r'lgscale.csv'):
     # names = ["_st","from","to","value"]
     ex_columns=['address','val_in','time_in']
     in_columns=['address','val_out','time_out']
-    ex_f = os.path.join(diry,'external_xinran.csv')
-    in_f = os.path.join(diry,'internal_xinran.csv')
+    ex_f = os.path.join(diry,'weimin_external.csv')
+    in_f = os.path.join(diry,'weimin_internal.csv')
+    addr_f = os.path.join(diry,addr)
     ex_df = pd.read_csv(ex_f)
     in_df = pd.read_csv(in_f)
-    label_df = pd.read_csv(addr)
-    label_df.columns = ['address','ponzi']
-    label_df['address'] = ['0x'+addr for addr in label_df['address'].values]
+    addr_df = pd.read_csv(addr_f)
+    addrs = addr_df['address'].values
+    addrs = ['0x'+a for a in addrs]
+    # label_df = pd.read_csv(addr)
+    # label_df.columns = ['address','ponzi']
+    # label_df['address'] = ['0x'+addr for addr in label_df['address'].values]
 
-    values = {} #addr:[val_ins,time_ins]
-    file = os.path.join(diry,'final.data')
+    values_in = {} #addr:[val_ins,time_ins]
+    values_out = {}
+    file = os.path.join(diry,'final_weimin.data')
     
     for i in range(ex_df.shape[0]):
         addr = ex_df.iloc[i]['to']
-        if addr not in values.keys():
-            values[addr] = [[int(ex_df.iloc[i]['value'])],[ex_df.iloc[i]['_st']]]
+        if addr not in values_in.keys():
+            values_in[addr] = [[int(ex_df.iloc[i]['value'])],[ex_df.iloc[i]['_st']]]
         else:
-            values[addr][0].append(int(ex_df.iloc[i]['value']))
-            values[addr][1].append(ex_df.iloc[i]['_st'])
-
-    addr_in, val_ins, time_ins = list(values.keys()), \
-        [str(values[key][0]) for key in values.keys()], [str(values[key][1]) for key in values.keys()]
+            values_in[addr][0].append(int(ex_df.iloc[i]['value']))
+            values_in[addr][1].append(ex_df.iloc[i]['_st'])
+        # addr = ex_df.iloc[i]['from']
+        # if addr not in values_out.keys():
+        #     values_out[addr] = [[int(ex_df.iloc[i]['value'])],[ex_df.iloc[i]['_st']]]
+        # else:
+        #     values_out[addr][0].append(int(ex_df.iloc[i]['value']))
+        #     values_out[addr][1].append(ex_df.iloc[i]['_st'])
 
     for i in range(in_df.shape[0]):
-        addr = in_df.iloc[i]['action_from']
-        if addr not in values.keys():
-            values[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+        addr = in_df.iloc[i]['action_to']
+        if addr not in values_in.keys():
+            values_in[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
         else:
-            values[addr][0].append(int(in_df.iloc[i]['action_value']))
-            values[addr][1].append(in_df.iloc[i]['_st'])
-             
-    addr_out, val_outs, time_outs = list(values.keys()), \
-        [str(values[key][0]) for key in values.keys()], [str(values[key][1]) for key in values.keys()]
+            values_in[addr][0].append(int(in_df.iloc[i]['action_value']))
+            values_in[addr][1].append(in_df.iloc[i]['_st'])
+        addr = in_df.iloc[i]['action_from']
+        if addr not in values_out.keys():
+            values_out[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+        else:
+            values_out[addr][0].append(int(in_df.iloc[i]['action_value']))
+            values_out[addr][1].append(in_df.iloc[i]['_st'])
+
+    keys = list(values_in.keys())
+    print(len(keys))
+    addr_in, val_ins, time_ins = list(values_in.keys()), \
+        [values_in[key][0] for key in keys], [values_in[key][1] for key in keys]
+
+    keys = list(values_out.keys())
+    print(len(keys))
+    addr_out, val_outs, time_outs = list(values_out.keys()), \
+        [values_out[key][0] for key in keys], [values_out[key][1] for key in keys]
 
     ins = [[addr_in[i],val_ins[i],time_ins[i]] for i in range(len(addr_in))]
     outs = [[addr_out[i],val_outs[i],time_outs[i]] for i in range(len(addr_out))]
@@ -49,7 +70,7 @@ def trxData(diry='data',addr=r'address\final_addr+label.csv'):
     df_out = pd.DataFrame(outs, columns=['address','val_out','time_out'])
 
     df = df_in.merge(df_out,how='outer')
-    df = df.merge(label_df,how='inner')
+    # df = df.merge(label_df,how='inner')
     df.to_csv(file,index=None)
     
     return file

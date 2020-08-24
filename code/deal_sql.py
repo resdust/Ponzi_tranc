@@ -61,6 +61,7 @@ def deal_out(addr_file,in_file,to_file):
     color.pInfo('collected '+str(len(transactions))+' transactions.')
     df = pd.DataFrame(data=transactions, columns=names_transaction)
     df.to_csv(to_file,index=False)
+    color.pImportant(to_file+'trx shape:'+str(df.shape))
     color.pDone('Done')
 
 def deal_in(addr_file, in_file, to_file): 
@@ -109,8 +110,6 @@ def deal_in(addr_file, in_file, to_file):
     '''
     
     return block_hash
-
-
 
 """
 After recording internal transaction hashes, excute sql_query.timestamp_sql() 
@@ -220,8 +219,9 @@ def deal_feature(file_in, file_out, file_data, ponzi=None):
     #         contract.append('')
     #         contract.append('')
     #     contracts.append(contract)
-    df = pd.concat([df_in,df_out],join='outer',axis=1)
-    df.to_csv(file_data, index=False)
+    # df = pd.concat([df_in,df_out],join='outer',axis=1)
+    df_in.merge(df_out,how='outer')
+    df_in.to_csv(file_data, index=False)
     color.pDone('Have generated '+file_data+'.')
 
 if __name__=='__main__':
