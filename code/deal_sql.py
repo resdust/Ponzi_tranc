@@ -220,8 +220,8 @@ def deal_feature(file_in, file_out, file_data, ponzi=None):
     #         contract.append('')
     #     contracts.append(contract)
     # df = pd.concat([df_in,df_out],join='outer',axis=1)
-    df_in.merge(df_out,how='outer')
-    df_in.to_csv(file_data, index=False)
+    df = df_in.merge(df_out,how='outer')
+    df.to_csv(file_data, index=False)
     color.pDone('Have generated '+file_data+'.')
 
 if __name__=='__main__':

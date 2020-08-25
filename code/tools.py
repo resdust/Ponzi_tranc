@@ -92,8 +92,8 @@ def basic_features(ponzi,address,time_in,time_out,val_in,val_out):
     
     val_in = eval(val_in) if val_in!=0 else 0
     val_out = eval(val_out) if val_out!=0 else 0
-    val_in  = np.array(val_in).astype(np.float)
-    val_out = np.array(val_out).astype(np.float)
+    val_in  = np.array(val_in).astype(np.float64)
+    val_out = np.array(val_out).astype(np.float64)
 
     time_in = eval(time_in)
     time_out = eval(time_out)

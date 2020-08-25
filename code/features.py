@@ -27,31 +27,34 @@ def trxData(diry='data',addr=r'lgscale.csv'):
     
     for i in range(ex_df.shape[0]):
         addr = ex_df.iloc[i]['to']
-        if addr not in values_in.keys():
-            values_in[addr] = [[int(ex_df.iloc[i]['value'])],[ex_df.iloc[i]['_st']]]
+        if addr in addrs:
+            if addr not in values_in.keys():
+                values_in[addr] = [[int(ex_df.iloc[i]['value'])],[ex_df.iloc[i]['_st']]]
+            else:
+                values_in[addr][0].append(int(ex_df.iloc[i]['value']))
+                values_in[addr][1].append(ex_df.iloc[i]['_st'])
         else:
-            values_in[addr][0].append(int(ex_df.iloc[i]['value']))
-            values_in[addr][1].append(ex_df.iloc[i]['_st'])
-        # addr = ex_df.iloc[i]['from']
-        # if addr not in values_out.keys():
-        #     values_out[addr] = [[int(ex_df.iloc[i]['value'])],[ex_df.iloc[i]['_st']]]
-        # else:
-        #     values_out[addr][0].append(int(ex_df.iloc[i]['value']))
-        #     values_out[addr][1].append(ex_df.iloc[i]['_st'])
+            pass
 
     for i in range(in_df.shape[0]):
         addr = in_df.iloc[i]['action_to']
-        if addr not in values_in.keys():
-            values_in[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+        if addr in addrs:
+            if addr not in values_in.keys():
+                values_in[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+            else:
+                values_in[addr][0].append(int(in_df.iloc[i]['action_value']))
+                values_in[addr][1].append(in_df.iloc[i]['_st'])
         else:
-            values_in[addr][0].append(int(in_df.iloc[i]['action_value']))
-            values_in[addr][1].append(in_df.iloc[i]['_st'])
+            pass
         addr = in_df.iloc[i]['action_from']
-        if addr not in values_out.keys():
-            values_out[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+        if addr in addrs:
+            if addr not in values_out.keys():
+                values_out[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+            else:
+                values_out[addr][0].append(int(in_df.iloc[i]['action_value']))
+                values_out[addr][1].append(in_df.iloc[i]['_st'])
         else:
-            values_out[addr][0].append(int(in_df.iloc[i]['action_value']))
-            values_out[addr][1].append(in_df.iloc[i]['_st'])
+            pass
 
     keys = list(values_in.keys())
     print(len(keys))

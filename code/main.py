@@ -95,17 +95,17 @@ def collectTxnIn(p, addr, timeout=200):
     # collect the query result into txn features
     deal_sql.deal_in_timestamp(txn_file, time_file)
 
-    # send command to sql process
-    out_file = os.path.join('result',name+'_internal.out')
+    # send internal command to sql process
+    out_inter_file = os.path.join('result',name+'_internal.out')
     color.pInfo('Sending incoming transaction in internal_trx to psql server')
-    p.sendline('\o '+out_file)
+    p.sendline('\o '+out_inter_file)
     p.expect('#')
     sq.val_sql(addr, query_in[-2:], p)
-    color.pDone('Have generated '+out_file+'.')
+    color.pDone('Have generated '+out_inter_file+'.')
     
     # collect the query result into txn features
-    txn_file_inter = os.path.join('result',name+'inter_out.csv')
-    deal_sql.deal_out(addr, out_file, txn_file_inter)
+    txn_file_inter = os.path.join('result',name+'inter_in.csv')
+    deal_sql.deal_out(addr, out_inter_file, txn_file_inter)
 
     df1 = pd.read_csv(txn_file)
     df2 = pd.read_csv(txn_file_inter)
