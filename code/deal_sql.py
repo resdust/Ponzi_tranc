@@ -172,11 +172,12 @@ def sequence(df):
         time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
         time = time.timestamp()
 
-        if addr in addr_vals:
-            addr_vals[addr][0].append(value)
-            addr_vals[addr][1].append(time)
-        else:
-            addr_vals[addr]=[str(val_in),str(time_in)]
+        if addr in addrs:
+            if addr in addr_vals:
+                addr_vals[addr][0].append(value)
+                addr_vals[addr][1].append(time)
+            else:
+                addr_vals[addr]=[[str(val_in)],[str(time_in)]]
 
     keys = list(addr_vals.keys())
     addr_ins, val_ins, time_ins = list(addr_vals.keys()), \
