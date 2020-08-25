@@ -110,6 +110,7 @@ def collectTxnIn(p, addr, timeout=200):
     df1 = pd.read_csv(txn_file)
     df2 = pd.read_csv(txn_file_inter)
     df = df1.append(df2)
+    df.sort_values(by='address')
     df.to_csv(txn_file,index=None)
     color.pImportant('incoming txn shape'+str(df.shape))
     
@@ -144,7 +145,7 @@ if __name__=='__main__':
     color.pInfo('Usage: python code/main.py')
 
     psql = 'psql --host 192.168.1.2 -U gby ethereum'
-    addrs = ['100dapp.csv']
+    addrs = ['100dapp_addr.csv']
     # addrs = ['dapp1.csv','dapp2.csv','dapp3.csv','dapp4.csv']
     
     # collect val and time sequence from addresses
