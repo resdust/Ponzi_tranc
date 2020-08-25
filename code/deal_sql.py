@@ -159,9 +159,6 @@ def sequence(df):
 
     ins = df
     addr_vals = {}
-    val_in = []
-    time_in = []
-    addr_ins = []
     addrs = ins['address'].values
     addrs = [eval(x)[0] for x in addrs]
 
@@ -177,11 +174,11 @@ def sequence(df):
                 addr_vals[addr][0].append(value)
                 addr_vals[addr][1].append(time)
             else:
-                addr_vals[addr]=[[str(val_in)],[str(time_in)]]
+                addr_vals[addr]=[[value],[time]]
 
     keys = list(addr_vals.keys())
-    addr_ins, val_ins, time_ins = list(addr_vals.keys()), \
-        [addr_vals[key][0] for key in keys], [addr_vals[key][1] for key in keys]
+    addr_ins, val_ins, time_ins = keys, \
+        [str(addr_vals[key][0]) for key in keys], [str(addr_vals[key][1]) for key in keys]
 
     return addr_ins,val_ins, time_ins
 
