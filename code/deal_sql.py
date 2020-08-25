@@ -158,34 +158,30 @@ def sequence(df):
     from datetime import datetime
 
     ins = df
-    val_ins = {}
-    time_ins = {}
+    addr_vals = {}
     val_in = []
     time_in = []
     addr_ins = []
     addrs = ins['address'].values
     addrs = [eval(x)[0] for x in addrs]
-    addr = addrs[0]
 
     for i in range(ins.shape[0]):
+        addr = ins['address'][i]
         value = ins['value'][i]
         time = ins['timestamp'][i][:-3]
         time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
         time = time.timestamp()
 
-        if addr == addrs[i]:
-            val_in.append(value)
-            time_in.append(time)
+        if addr in addr_vals:
+            addr_vals[addr][0].append(value)
+            addr_vals[addr][1].append(time)
         else:
-            val_ins[i]=str(val_in)
-            time_ins[i]=str(time_in)
-            val_in = [value]
-            time_in = [time]
-            addr_ins.append(addr)
-        addr = addrs[i]
-    val_ins = list(val_ins.values())
-    time_ins = list(time_ins.values())
-    
+            addr_vals[addr]=[str(val_in),str(time_in)]
+
+    keys = list(addr_vals.keys())
+    addr_ins, val_ins, time_ins = list(addr_vals.keys()), \
+        [addr_vals[key][0] for key in keys], [addr_vals[key][1] for key in keys]
+
     return addr_ins,val_ins, time_ins
 
 def deal_feature(file_in, file_out, file_data, ponzi=None):
