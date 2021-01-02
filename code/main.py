@@ -145,9 +145,10 @@ if __name__=='__main__':
     color.pInfo('Usage: python code/main.py')
 
     psql = 'psql --host 192.168.1.2 -U gby ethereum'
-    addrs = ['100dapp_addr.csv']
-    # addrs = ['dapp1.csv','dapp2.csv','dapp3.csv','dapp4.csv']
-    
+    addrs = ['116ponzi+116dapp_addr.csv']
+    #addrs = ['dapp1.csv','dapp2.csv','dapp3.csv','dapp4.csv']
+    #addrs = ['merged_'+str(i)+'.csv' for i in range(10)]    
+
     # collect val and time sequence from addresses
     dirPath = 'address'
     # addrs = os.listdir(dirPath)
