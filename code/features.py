@@ -120,7 +120,7 @@ def extract(database):
     tl.compute_time(t0)
 
     df_features = pd.DataFrame(tx_features,columns=f_names)
-    name = os.path.basename(database).split('.')[0]
+    name = os.path.basename(database).split('.')[0].split('_')[0]
     f_file = os.path.join('feature',name+'_feature.csv')
     df_features.to_csv(f_file,index=None)
     color.pDone('Have written feature file '+ f_file+'.')

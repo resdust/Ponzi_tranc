@@ -155,7 +155,9 @@ if __name__=='__main__':
     p = connectPSQL(psql)
     times = [time.time()]
 
-    for addr in addrs:
+    #for addr in addrs:
+    for i in range(1):
+        addr = 'new1.csv'
         color.pImportant('addr file: '+addr)
         full_path = os.path.join(dirPath,addr)
         
