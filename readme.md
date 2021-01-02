@@ -1,5 +1,8 @@
 # USAGE
 ```
+sudo apt-get install postgresql-client
+pip install pexpect,pandas,colorama
+
 mkdir sql
 mkdir result
 python code/main.py
@@ -8,7 +11,7 @@ python code/main.py
 ## feature
 
 | 特征名称        | 含义                                     | 类型         |
-| --------------- | ---------------------------------------- | ------------ |
+| --------------- | --------------------------------------- | ------------ |
 | ponzi           | 是否为庞氏合约的标签，庞氏：1，normal：0 | nominal{0,1} |
 | nbr_tx_in       | 向合约转账交易总次数                     | numerical    |
 | nbr_tx_out      | 合约向外转账总次数                       | numerical    |

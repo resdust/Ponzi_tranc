@@ -5,65 +5,69 @@ import color
 import os
 import time
 
-def trxData(diry='data',addr=r'lgscale.csv'):
+def trxData(diry='data',addr=r'merged9747_addr.csv',i=4):
     # names = ["_st","from","to","value"]
     ex_columns=['address','val_in','time_in']
     in_columns=['address','val_out','time_out']
-    ex_f = os.path.join(diry,'weimin_external.csv')
-    in_f = os.path.join(diry,'weimin_internal.csv')
+    ex_f = os.path.join(diry,'external_transactions_prt_'+str(i)+'.csv')
+    in_f = os.path.join(diry,'internal_transactions_prt_'+str(i)+'.csv')
     addr_f = os.path.join(diry,addr)
     ex_df = pd.read_csv(ex_f)
     in_df = pd.read_csv(in_f)
-    addr_df = pd.read_csv(addr_f)
+    addr_df = pd.read_csv(addr_f,header=None)
+    addr_df.columns=['address']
     addrs = addr_df['address'].values
-    addrs = ['0x'+a for a in addrs]
+    # addrs = ['0x'+a for a in addrs]
     # label_df = pd.read_csv(addr)
     # label_df.columns = ['address','ponzi']
     # label_df['address'] = ['0x'+addr for addr in label_df['address'].values]
 
     values_in = {} #addr:[val_ins,time_ins]
     values_out = {}
-    file = os.path.join(diry,'final_weimin.data')
+    file = os.path.join(diry,'merge_prt_'+str(i)+'.data')
     
-    for i in range(ex_df.shape[0]):
-        addr = ex_df.iloc[i]['to']
+    for data in ex_df.values:
+        addr = data[2]
         if addr in addrs:
             if addr not in values_in.keys():
-                values_in[addr] = [[int(ex_df.iloc[i]['value'])],[ex_df.iloc[i]['_st']]]
+                values_in[addr] = [[float(data[3])],[float(data[0])]]
             else:
-                values_in[addr][0].append(int(ex_df.iloc[i]['value']))
-                values_in[addr][1].append(ex_df.iloc[i]['_st'])
+                if len(values_in[addr][0])>=1000:
+                    continue
+                values_in[addr][0].append(float(data[3]))
+                values_in[addr][1].append(float(data[0]))
         else:
             pass
 
-    for i in range(in_df.shape[0]):
-        addr = in_df.iloc[i]['action_to']
-        if addr in addrs:
-            if addr not in values_in.keys():
-                values_in[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+    for data in in_df.values:
+        addr_to = data[2]
+        addr_from = data[1]
+        if (addr_to in addrs):
+            if addr_to not in values_in.keys():
+                values_in[addr_to] = [[float(data[3])],[float(data[0])]]
             else:
-                values_in[addr][0].append(int(in_df.iloc[i]['action_value']))
-                values_in[addr][1].append(in_df.iloc[i]['_st'])
-        else:
-            pass
-        addr = in_df.iloc[i]['action_from']
-        if addr in addrs:
-            if addr not in values_out.keys():
-                values_out[addr] = [[int(in_df.iloc[i]['action_value'])],[in_df.iloc[i]['_st']]]
+                if len(values_in[addr_to][0])>=2000:
+                    continue
+                values_in[addr_to][0].append(float(data[3]))
+                values_in[addr_to][1].append(float(data[0]))
+
+        if (addr_from in addrs):
+            if addr_from not in values_out.keys():
+                values_out[addr_from] = [[float(data[3])],[float(data[0])]]
             else:
-                values_out[addr][0].append(int(in_df.iloc[i]['action_value']))
-                values_out[addr][1].append(in_df.iloc[i]['_st'])
-        else:
-            pass
+                if len(values_out[addr_from][0])>=1000:
+                    continue
+                values_out[addr_from][0].append(float(data[3]))
+                values_out[addr_from][1].append(float(data[0]))
 
     keys = list(values_in.keys())
     print(len(keys))
-    addr_in, val_ins, time_ins = list(values_in.keys()), \
+    addr_in, val_ins, time_ins = keys, \
         [values_in[key][0] for key in keys], [values_in[key][1] for key in keys]
 
     keys = list(values_out.keys())
     print(len(keys))
-    addr_out, val_outs, time_outs = list(values_out.keys()), \
+    addr_out, val_outs, time_outs = keys, \
         [values_out[key][0] for key in keys], [values_out[key][1] for key in keys]
 
     ins = [[addr_in[i],val_ins[i],time_ins[i]] for i in range(len(addr_in))]

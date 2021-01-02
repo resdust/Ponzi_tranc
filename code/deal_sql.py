@@ -159,9 +159,6 @@ def sequence(df):
 
     ins = df
     addr_vals = {}
-    val_in = []
-    time_in = []
-    addr_ins = []
     addrs = ins['address'].values
     addrs = [eval(x)[0] for x in addrs]
 
