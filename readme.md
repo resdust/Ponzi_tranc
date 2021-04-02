@@ -41,9 +41,9 @@ weka.classifiers.trees.RandomForest -P 100 -I 100 -num-slots 1 -K 0 -M 1.0 -V 0.
 |:---:|:---:|:---:|:---:|
 |0.890|0.890|0.890|0.890|
 
-![image-20200821094505026](C:\Users\14415\AppData\Roaming\Typora\typora-user-images\image-20200821094505026.png)
+![](.\log\weka result.png)
 
-![image-20200821094719675](C:\Users\14415\AppData\Roaming\Typora\typora-user-images\image-20200821094719675.png)
+![weka features](.\log\weka features.png)
 
 ### fortrain
 133ponzi + 1262dapp
