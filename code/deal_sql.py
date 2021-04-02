@@ -163,12 +163,12 @@ def sequence(df):
     addrs = [eval(x)[0] for x in addrs]
 
     for i in range(ins.shape[0]):
-        addr = ins['address'][i]
+        addr = eval(ins['address'][i])[0]
         value = ins['value'][i]
         time = ins['timestamp'][i][:-3]
         time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
         time = time.timestamp()
-
+	
         if addr in addrs:
             if addr in addr_vals:
                 addr_vals[addr][0].append(value)
@@ -177,7 +177,7 @@ def sequence(df):
                 addr_vals[addr]=[[value],[time]]
 
     keys = list(addr_vals.keys())
-    addr_ins, val_ins, time_ins = keys, \
+    addr_ins, val_ins, time_ins = list(addr_vals.keys()), \
         [str(addr_vals[key][0]) for key in keys], [str(addr_vals[key][1]) for key in keys]
 
     return addr_ins,val_ins, time_ins

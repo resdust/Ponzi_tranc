@@ -19,9 +19,9 @@ def fscore(matrix): return 2*precision(matrix)*recall(matrix)/(precision(matrix)
 data_file = os.path.join('feature','fortraindapp+ponzi.csv')
 # data_file1 = os.path.join('feature','116ponzi+116dapp_rectifyied.csv')
 # data_file = os.path.join('feature','116ponzi+116dapp_addr_database_feature.csv')
-test_file = os.path.join('feature','merged1888_feature.csv')
+# test_file = os.path.join('feature','merged1888_feature.csv')
 df = pd.read_csv(data_file)
-test_df = pd.read_csv(test_file)
+# test_df = pd.read_csv(test_file)
 
 c=['nbr_tx_in', 'nbr_tx_out', 'Tot_in', 'Tot_out', 'mean_in',
        'mean_out', 'sdev_in', 'sdev_out', 'gini_in', 'gini_out',
