@@ -49,5 +49,5 @@ weka.classifiers.trees.RandomForest -P 100 -I 100 -num-slots 1 -K 0 -M 1.0 -V 0.
 133ponzi + 1262dapp
 Run classifier python file to get the result.
 |precision|recall|f-score|
-|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|
 |76.7%|57.9%|66.0%|
